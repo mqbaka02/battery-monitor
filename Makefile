@@ -1,18 +1,47 @@
 CXX := g++
 
 # Find Conan's generated .pc files in the project root.
-PKG_CONFIG_PATH := $(CURDIR)$(if $(PKG_CONFIG_PATH),:$(PKG_CONFIG_PATH))
-export PKG_CONFIG_PATH
+#PKG_CONFIG_PATH := $(CURDIR)$(if $(PKG_CONFIG_PATH),:$(PKG_CONFIG_PATH))
+#export PKG_CONFIG_PATH
 
-CXXFLAGS ?= -std=c++17 -Wall -Wextra -O2
+#CXXFLAGS ?= -std=c++17 -Wall -Wextra -O2
 #CPPFLAGS += $(shell pkg-config --cflags imgui implot sdl3)
-IMGUI_BACKENDS_DIR := $(shell pkg-config --variable=prefix imgui)/res/bindings
-CPPFLAGS += $(shell pkg-config --cflags imgui implot sdl3) -I$(IMGUI_BACKENDS_DIR)
-LDLIBS   += $(shell pkg-config --libs imgui implot sdl3)
+#IMGUI_BACKENDS_DIR := $(shell pkg-config --variable=prefix imgui)/res/bindings
+#CPPFLAGS += $(shell pkg-config --cflags imgui implot sdl3) -I$(IMGUI_BACKENDS_DIR)
+#LDLIBS   += $(shell pkg-config --libs imgui implot sdl3)
 
-CPPFLAGS += -Iinclude
+#PKG_CONFIG_PATH := $(CURDIR)$(if $(PKG_CONFIG_PATH),:$(PKG_CONFIG_PATH))
+#export PKG_CONFIG_PATH
 
-IMGUI_BACKENDS_DIR := $(shell pkg-config --variable=prefix imgui)/res/bindings
+#PKG_CONFIG := PKG_CONFIG_PATH="$(CURDIR):$${PKG_CONFIG_PATH}" pkg-config
+
+#IMGUI_BACKENDS_DIR := $(shell $(PKG_CONFIG) --variable=prefix imgui)/res/bindings
+
+#CPPFLAGS += $(shell $(PKG_CONFIG) --cflags imgui implot sdl3) -Iinclude -I$(IMGUI_BACKENDS_DIR)
+#LDLIBS   += $(shell $(PKG_CONFIG) --libs imgui implot sdl3)
+
+
+#PKG_CONFIG_PATH := $(CURDIR)$(if $(PKG_CONFIG_PATH),:$(PKG_CONFIG_PATH))
+#export PKG_CONFIG_PATH
+
+#IMGUI_BACKENDS_DIR := $(shell pkg-config --variable=prefix imgui)/res/bindings
+
+#CPPFLAGS += $(shell pkg-config --cflags imgui implot sdl3) -Iinclude -I$(IMGUI_BACKENDS_DIR)
+#LDLIBS   += $(shell pkg-config --libs imgui implot sdl3)
+
+# Conan-generated pkg-config files live in the project root.
+PKG_CONFIG := env PKG_CONFIG_PATH="$(CURDIR):$(PKG_CONFIG_PATH)" pkg-config
+
+IMGUI_BACKENDS_DIR := $(shell $(PKG_CONFIG) --variable=prefix imgui)/res/bindings
+
+CPPFLAGS += $(shell $(PKG_CONFIG) --cflags imgui implot sdl3) -Iinclude -I$(IMGUI_BACKENDS_DIR)
+LDLIBS   += $(shell $(PKG_CONFIG) --libs imgui implot sdl3)
+
+#CPPFLAGS += -Iinclude
+
+#IMGUI_BACKENDS_DIR := $(shell pkg-config --variable=prefix imgui)/res/bindings
+IMGUI_PREFIX := $(shell sed -n 's/^prefix=//p' imgui.pc)
+IMGUI_BACKENDS_DIR := $(IMGUI_PREFIX)/res/bindings
 
 TARGET := exec/battery-monitor
 BUILD_DIR := build
