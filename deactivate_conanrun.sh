@@ -1,0 +1,1 @@
+. "/home/mqbaka/Pros/battery-monitor/deactivate_conanrunenv-release-x86_64.sh"

@@ -1,0 +1,10 @@
+prefix=/home/mqbaka/.conan2/p/imgui375e1cacacb83/p
+libdir=${prefix}/lib
+includedir=${prefix}/include
+bindir=${prefix}/bin
+
+Name: imgui
+Description: Conan package: imgui
+Version: 1.92.5
+Libs: -L"${libdir}" -limgui -lm
+Cflags: -I"${includedir}"

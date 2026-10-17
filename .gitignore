@@ -1,0 +1,18 @@
+/exec
+
+# Build output
+/build/
+/exec/*
+!/exec/.gitkeep
+*.o
+
+# Conan-generated pkg-config files and environment scripts
+/imgui.pc
+/implot.pc
+/conanbuild*.sh
+/conanrun*.sh
+/deactivate_conan*.sh
+
+# Local IDE files
+.vscode/
+.idea/

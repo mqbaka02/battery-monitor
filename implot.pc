@@ -1,0 +1,11 @@
+prefix=/home/mqbaka/.conan2/p/imploef52a9772b382/p
+libdir=${prefix}/lib
+includedir=${prefix}/include
+bindir=${prefix}/bin
+
+Name: implot
+Description: Conan package: implot
+Version: 0.17
+Libs: -L"${libdir}" -limplot
+Cflags: -I"${includedir}"
+Requires: imgui
