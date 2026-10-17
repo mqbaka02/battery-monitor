@@ -3,6 +3,7 @@
 # Build output
 /build/
 /exec/*
+/temp_logs/*
 !/exec/.gitkeep
 *.o
 

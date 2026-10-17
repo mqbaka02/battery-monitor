@@ -10,6 +10,8 @@ IMGUI_BACKENDS_DIR := $(shell pkg-config --variable=prefix imgui)/res/bindings
 CPPFLAGS += $(shell pkg-config --cflags imgui implot sdl3) -I$(IMGUI_BACKENDS_DIR)
 LDLIBS   += $(shell pkg-config --libs imgui implot sdl3)
 
+CPPFLAGS += -Iinclude
+
 IMGUI_BACKENDS_DIR := $(shell pkg-config --variable=prefix imgui)/res/bindings
 
 TARGET := exec/battery-monitor
@@ -30,7 +32,8 @@ $(TARGET): $(APP_OBJECTS) $(BACKEND_OBJECTS) | exec
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 $(BUILD_DIR)/%.o: src/%.cpp | $(BUILD_DIR)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MMD -MP -c $< -o $@
+#	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/imgui_impl_sdl3.o: $(IMGUI_BACKENDS_DIR)/imgui_impl_sdl3.cpp | $(BUILD_DIR)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
