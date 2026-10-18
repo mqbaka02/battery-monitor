@@ -5,7 +5,8 @@ PairData read_pairs(const char *filename)
     PairData result = {NULL, NULL, 0};
     FILE *fp = fopen(filename, "r");
     if (!fp) {
-        perror("Failed to open file");
+        perror("Failed to open file and bumped into a wall");
+        printf("'%s' failed to open\n", filename);
         return result;
     }
 
@@ -37,6 +38,7 @@ PairData read_pairs(const char *filename)
     rewind(fp);
     int i = 0;
     while (i < count && fscanf(fp, "%f,%f", &result.x[i], &result.y[i]) == 2) {
+        // printf("%d: %f, %f\n", i, result.x[i], result.y[i]); //Debug
         i++;
     }
 

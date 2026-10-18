@@ -1,0 +1,326 @@
+Frame : 60, battery : 99%, Time remaining: unknown
+
+Frame : 120, battery : 99%, Time remaining: unknown
+
+Frame : 180, battery : 99%, Time remaining: unknown
+
+Frame : 240, battery : 99%, Time remaining: unknown
+
+Frame : 300, battery : 99%, Time remaining: unknown
+
+Frame : 60, battery : 99%, Time remaining: unknown
+
+Frame : 120, battery : 99%, Time remaining: unknown
+
+Frame : 180, battery : 99%, Time remaining: unknown
+
+Frame : 240, battery : 99%, Time remaining: unknown
+
+Frame : 300, battery : 99%, Time remaining: unknown
+
+Frame : 360, battery : 99%, Time remaining: unknown
+
+Frame : 420, battery : 99%, Time remaining: unknown
+
+Frame : 480, battery : 99%, Time remaining: unknown
+
+Frame : 540, battery : 99%, Time remaining: unknown
+
+Frame : 600, battery : 99%, Time remaining: unknown
+
+Frame : 660, battery : 99%, Time remaining: unknown
+
+Frame : 720, battery : 99%, Time remaining: unknown
+
+Frame : 780, battery : 99%, Time remaining: unknown
+
+Frame : 840, battery : 99%, Time remaining: unknown
+
+Frame : 900, battery : 99%, Time remaining: unknown
+
+Frame : 960, battery : 99%, Time remaining: unknown
+
+Frame : 1020, battery : 99%, Time remaining: unknown
+
+Frame : 1080, battery : 99%, Time remaining: unknown
+
+Frame : 1140, battery : 99%, Time remaining: unknown
+
+Frame : 1200, battery : 99%, Time remaining: unknown
+
+Frame : 1260, battery : 99%, Time remaining: unknown
+
+Frame : 1320, battery : 99%, Time remaining: unknown
+
+Frame : 1380, battery : 99%, Time remaining: unknown
+
+Frame : 1440, battery : 99%, Time remaining: unknown
+
+Frame : 1500, battery : 99%, Time remaining: unknown
+
+Frame : 1560, battery : 99%, Time remaining: unknown
+
+Frame : 1620, battery : 99%, Time remaining: unknown
+
+Frame : 1680, battery : 99%, Time remaining: unknown
+
+Frame : 1740, battery : 99%, Time remaining: unknown
+
+Frame : 1800, battery : 99%, Time remaining: unknown
+
+Frame : 1860, battery : 99%, Time remaining: unknown
+
+Frame : 1920, battery : 99%, Time remaining: unknown
+
+Frame : 1980, battery : 99%, Time remaining: unknown
+
+Frame : 2040, battery : 99%, Time remaining: unknown
+
+Frame : 2100, battery : 99%, Time remaining: unknown
+
+Frame : 2160, battery : 99%, Time remaining: unknown
+
+Frame : 2220, battery : 99%, Time remaining: unknown
+
+Frame : 2280, battery : 99%, Time remaining: unknown
+
+Frame : 2340, battery : 99%, Time remaining: unknown
+
+Frame : 2400, battery : 99%, Time remaining: unknown
+
+Frame : 2460, battery : 99%, Time remaining: unknown
+
+Frame : 2520, battery : 99%, Time remaining: unknown
+
+Frame : 2580, battery : 99%, Time remaining: unknown
+
+Frame : 2640, battery : 99%, Time remaining: unknown
+
+Frame : 2700, battery : 99%, Time remaining: unknown
+
+Frame : 2760, battery : 99%, Time remaining: unknown
+
+Frame : 2820, battery : 99%, Time remaining: unknown
+
+Frame : 2880, battery : 99%, Time remaining: unknown
+
+Frame : 2940, battery : 99%, Time remaining: unknown
+
+Frame : 3000, battery : 99%, Time remaining: unknown
+
+Frame : 3060, battery : 99%, Time remaining: unknown
+
+Frame : 3120, battery : 99%, Time remaining: unknown
+
+Frame : 3180, battery : 99%, Time remaining: unknown
+
+Frame : 3240, battery : 99%, Time remaining: unknown
+
+Frame : 3300, battery : 99%, Time remaining: unknown
+
+Frame : 3360, battery : 99%, Time remaining: unknown
+
+Frame : 3420, battery : 99%, Time remaining: unknown
+
+Frame : 3480, battery : 99%, Time remaining: unknown
+
+Frame : 3540, battery : 99%, Time remaining: unknown
+
+Frame : 3600, battery : 99%, Time remaining: unknown
+
+Frame : 3660, battery : 99%, Time remaining: unknown
+
+Frame : 3720, battery : 99%, Time remaining: unknown
+
+Frame : 3780, battery : 99%, Time remaining: unknown
+
+Frame : 3840, battery : 99%, Time remaining: unknown
+
+Frame : 60, battery : 99%, Time remaining: unknown
+
+Frame : 120, battery : 99%, Time remaining: unknown
+
+Frame : 180, battery : 99%, Time remaining: unknown
+
+Frame : 240, battery : 99%, Time remaining: unknown
+
+Frame : 300, battery : 99%, Time remaining: unknown
+
+Frame : 360, battery : 99%, Time remaining: unknown
+
+Frame : 420, battery : 99%, Time remaining: unknown
+
+Frame : 480, battery : 99%, Time remaining: unknown
+
+Frame : 60, battery : 99%, Time remaining: unknown
+
+Frame : 120, battery : 99%, Time remaining: unknown
+
+Frame : 180, battery : 99%, Time remaining: unknown
+
+Frame : 240, battery : 99%, Time remaining: unknown
+
+Frame : 300, battery : 99%, Time remaining: unknown
+
+Frame : 360, battery : 99%, Time remaining: unknown
+
+Frame : 420, battery : 99%, Time remaining: unknown
+
+Frame : 480, battery : 99%, Time remaining: unknown
+
+Frame : 540, battery : 99%, Time remaining: unknown
+
+Frame : 600, battery : 99%, Time remaining: unknown
+
+Frame : 660, battery : 99%, Time remaining: unknown
+
+Frame : 720, battery : 99%, Time remaining: unknown
+
+Frame : 780, battery : 99%, Time remaining: unknown
+
+Frame : 840, battery : 99%, Time remaining: unknown
+
+Frame : 900, battery : 99%, Time remaining: unknown
+
+Frame : 960, battery : 99%, Time remaining: unknown
+
+Frame : 1020, battery : 99%, Time remaining: unknown
+
+Frame : 1080, battery : 99%, Time remaining: unknown
+
+Frame : 1140, battery : 99%, Time remaining: unknown
+
+Frame : 1200, battery : 99%, Time remaining: unknown
+
+Frame : 1260, battery : 99%, Time remaining: unknown
+
+Frame : 1320, battery : 99%, Time remaining: unknown
+
+Frame : 1380, battery : 99%, Time remaining: unknown
+
+Frame : 60, battery : 99%, Time remaining: unknown
+
+Frame : 120, battery : 99%, Time remaining: unknown
+
+Frame : 180, battery : 99%, Time remaining: unknown
+
+Frame : 240, battery : 99%, Time remaining: unknown
+
+Frame : 300, battery : 99%, Time remaining: unknown
+
+Frame : 360, battery : 99%, Time remaining: unknown
+
+Frame : 420, battery : 99%, Time remaining: unknown
+
+Frame : 480, battery : 99%, Time remaining: unknown
+
+Frame : 540, battery : 99%, Time remaining: unknown
+
+Frame : 600, battery : 99%, Time remaining: unknown
+
+Frame : 660, battery : 99%, Time remaining: unknown
+
+Frame : 720, battery : 99%, Time remaining: unknown
+
+Frame : 780, battery : 99%, Time remaining: unknown
+
+Frame : 840, battery : 99%, Time remaining: unknown
+
+Frame : 900, battery : 99%, Time remaining: unknown
+
+Frame : 960, battery : 99%, Time remaining: unknown
+
+Frame : 1020, battery : 99%, Time remaining: unknown
+
+Frame : 1080, battery : 99%, Time remaining: unknown
+
+Frame : 1140, battery : 99%, Time remaining: unknown
+
+Frame : 1200, battery : 99%, Time remaining: unknown
+
+Frame : 1260, battery : 99%, Time remaining: unknown
+
+Frame : 1320, battery : 99%, Time remaining: unknown
+
+Frame : 1380, battery : 99%, Time remaining: unknown
+
+Frame : 1440, battery : 99%, Time remaining: unknown
+
+Frame : 1500, battery : 99%, Time remaining: unknown
+
+Frame : 1560, battery : 99%, Time remaining: unknown
+
+Frame : 1620, battery : 99%, Time remaining: unknown
+
+Frame : 1680, battery : 99%, Time remaining: unknown
+
+Frame : 1740, battery : 99%, Time remaining: unknown
+
+Frame : 1800, battery : 99%, Time remaining: unknown
+
+Frame : 1860, battery : 99%, Time remaining: unknown
+
+Frame : 1920, battery : 99%, Time remaining: unknown
+
+Frame : 1980, battery : 99%, Time remaining: unknown
+
+Frame : 2040, battery : 99%, Time remaining: unknown
+
+Frame : 2100, battery : 99%, Time remaining: unknown
+
+Frame : 2160, battery : 99%, Time remaining: unknown
+
+Frame : 2220, battery : 99%, Time remaining: unknown
+
+Frame : 2280, battery : 99%, Time remaining: unknown
+
+Frame : 2340, battery : 99%, Time remaining: unknown
+
+Frame : 2400, battery : 99%, Time remaining: unknown
+
+Frame : 60, battery : 99%, Time remaining: unknown
+
+Frame : 120, battery : 99%, Time remaining: unknown
+
+Frame : 180, battery : 99%, Time remaining: unknown
+
+Frame : 240, battery : 99%, Time remaining: unknown
+
+Frame : 300, battery : 99%, Time remaining: unknown
+
+Frame : 360, battery : 99%, Time remaining: unknown
+
+Frame : 420, battery : 99%, Time remaining: unknown
+
+Frame : 480, battery : 99%, Time remaining: unknown
+
+Frame : 540, battery : 99%, Time remaining: unknown
+
+Frame : 60, battery : 99%, Time remaining: unknown
+
+Frame : 120, battery : 99%, Time remaining: unknown
+
+Frame : 180, battery : 99%, Time remaining: unknown
+
+Frame : 240, battery : 99%, Time remaining: unknown
+
+Frame : 60, battery : 99%, Time remaining: unknown
+
+Frame : 120, battery : 99%, Time remaining: unknown
+
+Frame : 180, battery : 99%, Time remaining: unknown
+
+Frame : 240, battery : 99%, Time remaining: unknown
+
+Frame : 300, battery : 99%, Time remaining: unknown
+
+Frame : 360, battery : 99%, Time remaining: unknown
+
+Frame : 420, battery : 99%, Time remaining: unknown
+
+Frame : 480, battery : 99%, Time remaining: unknown
+
+Frame : 540, battery : 99%, Time remaining: unknown
+
+Frame : 600, battery : 99%, Time remaining: unknown
+
