@@ -7,6 +7,7 @@
 #include <string>
 #include "hours.h"
 #include "data.h"
+#include "read_logs.h"
 
 namespace {
 
@@ -15,8 +16,8 @@ namespace {
     constexpr int WINDOW_HEIGHT = 360;
 
     constexpr ImVec2 BATTERY_PANEL_POS  {0, 0};
-    constexpr ImVec2 BATTERY_PANEL_SIZE {480, 100};
-    constexpr float  PLOT_PANEL_TOP     = 120;
+    constexpr ImVec2 BATTERY_PANEL_SIZE {480, 55};
+    constexpr float  PLOT_PANEL_TOP     = 55;
     constexpr float  PLOT_PANEL_MARGIN  = 0;   // bottom margin
 
     constexpr ImGuiWindowFlags PANEL_FLAGS =
@@ -27,7 +28,7 @@ namespace {
     /*Battery constants */
     constexpr int BATTERY_MARGIN = 8; // Default Imgui Window padding according to Google
     constexpr int BATTERY_WIDTH  = 480 - 16;
-    constexpr int BATTERY_HEIGHT = 50;
+    constexpr int BATTERY_HEIGHT = 5;
     constexpr int BATTERY_BORDER = 1;
 
     constexpr ImU32 COL_GREEN = IM_COL32(55, 255, 55, 255);
@@ -96,8 +97,7 @@ namespace {
 
     void plotSection(const PairData& data)
     {
-        if (!ImPlot::BeginPlot("Battery usage"))
-            return;
+        if (!ImPlot::BeginPlot("Battery usage")) return;
 
         ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, data.count);
         ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, 100);
@@ -109,6 +109,35 @@ namespace {
         ImPlot::SetNextMarkerStyle(ImPlotMarker_Circle, 5.0f, ImVec4(1, 0, 0, 1), -1.0f);
         ImPlot::PlotLine("Battery %", data.x, data.y, data.count);
         ImPlot::PlotShaded("Battery % (area)", data.x, data.y, data.count, 0.0);
+
+        ImPlot::PopStyleColor(2);
+        ImPlot::PopStyleVar();
+        ImPlot::EndPlot();
+    }
+
+    void plotSection_(const PlotSeries& series)
+    {
+        if (!ImPlot::BeginPlot("Battery usage")) return;
+
+        ImPlot::SetupAxis(ImAxis_X1, nullptr, ImPlotScale_Time);
+        ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 100);
+
+        const int n = (int)series.x.size();
+        if (n > 0) {
+            // Fit the view to the data the first time it's shown
+            ImPlot::SetupAxisLimits(ImAxis_X1, series.x.front(), series.x.back(), ImPlotCond_Once);
+            ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, 100);
+        }
+
+        ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.5f);
+        ImPlot::PushStyleColor(ImPlotCol_Line, IM_COL32(0, 200, 100, 255));
+        ImPlot::PushStyleColor(ImPlotCol_Fill, ImVec4(0.2f, 0.6f, 0.9f, 0.25f));
+
+        if (n > 0) {
+            ImPlot::SetNextMarkerStyle(ImPlotMarker_Circle, 5.0f, ImVec4(1, 0, 0, 1), -1.0f);
+            ImPlot::PlotLine("Battery %", series.x.data(), series.y.data(), n);
+            ImPlot::PlotShaded("Battery % (area)", series.x.data(), series.y.data(), n, 0.0);
+        }
 
         ImPlot::PopStyleColor(2);
         ImPlot::PopStyleVar();
@@ -161,6 +190,8 @@ namespace {
 
 int main()
 {
+    std::vector<SingleInstantBatteryState> s= read_from_log_file_vector(const_cast<char*>("/home/mqbaka/29-1-2026.log"));
+    const PlotSeries plot= getXY(s);
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
         return 1;
@@ -204,12 +235,17 @@ int main()
         batterySection(battery);
         ImGui::End();
 
+        // Remove the default padding for the next window 
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
         beginPanel(
             "Plot",
             ImVec2(0, PLOT_PANEL_TOP),
             ImVec2(io.DisplaySize.x, io.DisplaySize.y - PLOT_PANEL_TOP - PLOT_PANEL_MARGIN)
         );
-        plotSection(data);
+        // The next line is needed whenever we use PushStyleVar
+        ImGui::PopStyleVar();
+        plotSection_(plot);
         ImGui::End();
 
         renderFrame(renderer);
