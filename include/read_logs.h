@@ -23,6 +23,7 @@ typedef struct
 struct PlotSeries {
     std::vector<double> x;
     std::vector<double> y;
+    std::vector<int> power;
 };
 
 

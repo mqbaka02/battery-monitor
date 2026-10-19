@@ -177,10 +177,12 @@ PlotSeries getXY(const std::vector<SingleInstantBatteryState>& data)
     PlotSeries result;
     result.x.reserve(data.size());
     result.y.reserve(data.size());
+    result.power.reserve(data.size());
 
     for (const auto& item : data) {
         result.x.push_back(getEpochFromTimeStamp(item.getTimeStamp()));
         result.y.push_back(item.getBatteryStatus());
+        result.power.push_back(item.getPowerStatus());
     }
     return result;
 }

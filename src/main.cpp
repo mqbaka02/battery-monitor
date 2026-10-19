@@ -71,8 +71,11 @@ namespace {
         const float  fillWidth = BATTERY_WIDTH * percentage / 100.0f;
 
         drawList->AddRectFilled(position, ImVec2(position.x + outerSize.x, position.y + outerSize.y), COL_WHITE);
-        drawList->AddRectFilled(innerPos, ImVec2(innerPos.x + fillWidth, innerPos.y + BATTERY_HEIGHT),
-                                decideColor(powerState));
+        drawList->AddRectFilled(
+            innerPos,
+            ImVec2(innerPos.x + fillWidth, innerPos.y + BATTERY_HEIGHT),
+            decideColor(powerState)
+        );
     }
 
     /*UI utility functions*/
@@ -115,7 +118,44 @@ namespace {
         ImPlot::EndPlot();
     }
 
-    void plotSection_(const PlotSeries& series)
+    struct Segment {
+        size_t start;
+        size_t count;
+        int power;
+    };
+
+    std::vector<Segment> buildSegments(const PlotSeries& series)
+    {
+        std::vector<Segment> segs;
+        const size_t n= series.x.size();
+
+        if (n< 2) return segs;
+
+        size_t start= 0;
+        for (size_t i= 1; i< n; i++)
+        {
+            if (series.power[i] != series.power[start]) //if the power state changes
+            {
+                segs.push_back({start, i - start + 1, series.power[start]}); //
+                start= i;
+            }
+        }
+        segs.push_back({start, n - start, series.power[start]});
+
+        return segs;
+    }
+
+    const char* powerLabel(int powerState)
+    {
+        switch (powerState) {
+            case POWER_NO_BATTERY:
+            case POWER_CHARGING:   return "Charging / AC";
+            case POWER_ON_BATTERY: return "On battery";
+            default:               return "Unknown";
+        }
+    }
+
+    void plotSection_(const PlotSeries& series, const std::vector<Segment>& segments)
     {
         if (!ImPlot::BeginPlot("Battery usage")) return;
 
@@ -123,24 +163,35 @@ namespace {
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 100);
 
         const int n = (int)series.x.size();
-        if (n > 0) {
-            // Fit the view to the data the first time it's shown
+        if (n > 0)
+        {
             ImPlot::SetupAxisLimits(ImAxis_X1, series.x.front(), series.x.back(), ImPlotCond_Once);
             ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, 100);
         }
 
-        ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.5f);
-        ImPlot::PushStyleColor(ImPlotCol_Line, IM_COL32(0, 200, 100, 255));
-        ImPlot::PushStyleColor(ImPlotCol_Fill, ImVec4(0.2f, 0.6f, 0.9f, 0.25f));
+        // Shaded areas first, so the line is drawn on top
+        for (const Segment& seg : segments)
+        {
+            if (seg.count < 2) continue;
 
-        if (n > 0) {
-            ImPlot::SetNextMarkerStyle(ImPlotMarker_Circle, 5.0f, ImVec4(1, 0, 0, 1), -1.0f);
-            ImPlot::PlotLine("Battery %", series.x.data(), series.y.data(), n);
-            ImPlot::PlotShaded("Battery % (area)", series.x.data(), series.y.data(), n, 0.0);
+            const ImVec4 color = ImGui::ColorConvertU32ToFloat4(decideColor(seg.power));
+            ImPlot::SetNextFillStyle(color, 0.35f);
+            ImPlot::PlotShaded(
+                powerLabel(seg.power),
+                series.x.data() + seg.start,
+                series.y.data() + seg.start,
+                (int)seg.count,
+                0.0
+            );
         }
 
-        ImPlot::PopStyleColor(2);
-        ImPlot::PopStyleVar();
+        if (n > 0)
+        {
+            ImPlot::SetNextLineStyle(ImVec4(1, 1, 1, 1), 2.0f);
+            ImPlot::SetNextMarkerStyle(ImPlotMarker_Circle, 3.0f, ImVec4(1, 1, 1, 1), -1.0f);
+            ImPlot::PlotLine("Battery %", series.x.data(), series.y.data(), n);
+        }
+
         ImPlot::EndPlot();
     }
 
@@ -190,8 +241,9 @@ namespace {
 
 int main()
 {
-    std::vector<SingleInstantBatteryState> s= read_from_log_file_vector(const_cast<char*>("/home/mqbaka/29-1-2026.log"));
-    const PlotSeries plot= getXY(s);
+    std::vector<SingleInstantBatteryState> s= read_from_log_file_vector(const_cast<char*>("/home/mqbaka/31-5-2026.log"));
+    const PlotSeries plots= getXY(s);
+    const std::vector<Segment> segments= buildSegments(plots);
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
         return 1;
@@ -245,7 +297,7 @@ int main()
         );
         // The next line is needed whenever we use PushStyleVar
         ImGui::PopStyleVar();
-        plotSection_(plot);
+        plotSection_(plots, segments);
         ImGui::End();
 
         renderFrame(renderer);
