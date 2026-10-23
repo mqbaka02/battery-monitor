@@ -5,6 +5,7 @@
 #include <imgui_impl_sdlrenderer3.h>
 #include <implot.h>
 #include <cstdio>
+#include <ctime>
 #include <string>
 #include "hours.h"
 #include "data.h"
@@ -118,26 +119,6 @@ namespace {
         );
     }
 
-    void plotSection(const PairData& data)
-    {
-        if (!ImPlot::BeginPlot("Battery usage")) return;
-
-        ImPlot::SetupAxisLimitsConstraints(ImAxis_X1, 0, data.count);
-        ImPlot::SetupAxisLimitsConstraints(ImAxis_Y1, 0, 100);
-
-        ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.5f);
-        ImPlot::PushStyleColor(ImPlotCol_Line, IM_COL32(0, 200, 100, 255));
-        ImPlot::PushStyleColor(ImPlotCol_Fill, ImVec4(0.2f, 0.6f, 0.9f, 0.25f));
-
-        ImPlot::SetNextMarkerStyle(ImPlotMarker_Circle, 5.0f, ImVec4(1, 0, 0, 1), -1.0f);
-        ImPlot::PlotLine("Battery %", data.x, data.y, data.count);
-        ImPlot::PlotShaded("Battery % (area)", data.x, data.y, data.count, 0.0);
-
-        ImPlot::PopStyleColor(2);
-        ImPlot::PopStyleVar();
-        ImPlot::EndPlot();
-    }
-
     struct Segment
     {
         size_t start;
@@ -179,11 +160,26 @@ namespace {
         }
     }
 
+    void DateFormatter(double value, char* buff, int size, void* user_data) {
+        // ImPlot time represents UNIX timestamp in seconds (with double precision)
+        time_t raw_time = static_cast<time_t>(value);
+        struct tm* timeinfo = std::localtime(&raw_time); // or std::gmtime for UTC
+        if (timeinfo) {
+            std::strftime(buff, size, "%d-%m-%Y", timeinfo);
+        } else {
+            snprintf(buff, size, "");
+        }
+    }
+
     void plotSection_(const PlotSeries& series, const std::vector<Segment>& segments)
     {
         if (!ImPlot::BeginPlot("Battery usage")) return;
 
-        // ImPlot::SetupAxis(ImAxis_X1, nullptr, ImPlotScale_Time);
+        ImPlotStyle& style = ImPlot::GetStyle();
+        style.Use24HourClock = true;   // 13:45 instead of 1:45pm
+        style.UseISO8601     = true;  // true gives 2026-01-29 instead of 01/29/2026
+        style.UseLocalTime   = false;  // keep false: we built timestamps with timegm (UTC)
+
         ImPlot::SetupAxis(ImAxis_X1);
         ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Time);
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 100);

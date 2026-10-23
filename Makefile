@@ -1,34 +1,5 @@
 CXX := g++
 
-# Find Conan's generated .pc files in the project root.
-#PKG_CONFIG_PATH := $(CURDIR)$(if $(PKG_CONFIG_PATH),:$(PKG_CONFIG_PATH))
-#export PKG_CONFIG_PATH
-
-#CXXFLAGS ?= -std=c++17 -Wall -Wextra -O2
-#CPPFLAGS += $(shell pkg-config --cflags imgui implot sdl3)
-#IMGUI_BACKENDS_DIR := $(shell pkg-config --variable=prefix imgui)/res/bindings
-#CPPFLAGS += $(shell pkg-config --cflags imgui implot sdl3) -I$(IMGUI_BACKENDS_DIR)
-#LDLIBS   += $(shell pkg-config --libs imgui implot sdl3)
-
-#PKG_CONFIG_PATH := $(CURDIR)$(if $(PKG_CONFIG_PATH),:$(PKG_CONFIG_PATH))
-#export PKG_CONFIG_PATH
-
-#PKG_CONFIG := PKG_CONFIG_PATH="$(CURDIR):$${PKG_CONFIG_PATH}" pkg-config
-
-#IMGUI_BACKENDS_DIR := $(shell $(PKG_CONFIG) --variable=prefix imgui)/res/bindings
-
-#CPPFLAGS += $(shell $(PKG_CONFIG) --cflags imgui implot sdl3) -Iinclude -I$(IMGUI_BACKENDS_DIR)
-#LDLIBS   += $(shell $(PKG_CONFIG) --libs imgui implot sdl3)
-
-
-#PKG_CONFIG_PATH := $(CURDIR)$(if $(PKG_CONFIG_PATH),:$(PKG_CONFIG_PATH))
-#export PKG_CONFIG_PATH
-
-#IMGUI_BACKENDS_DIR := $(shell pkg-config --variable=prefix imgui)/res/bindings
-
-#CPPFLAGS += $(shell pkg-config --cflags imgui implot sdl3) -Iinclude -I$(IMGUI_BACKENDS_DIR)
-#LDLIBS   += $(shell pkg-config --libs imgui implot sdl3)
-
 # Conan-generated pkg-config files live in the project root.
 PKG_CONFIG := env PKG_CONFIG_PATH="$(CURDIR):$(PKG_CONFIG_PATH)" pkg-config
 
@@ -36,8 +7,6 @@ IMGUI_BACKENDS_DIR := $(shell $(PKG_CONFIG) --variable=prefix imgui)/res/binding
 
 CPPFLAGS += $(shell $(PKG_CONFIG) --cflags imgui implot sdl3) -Iinclude -I$(IMGUI_BACKENDS_DIR)
 LDLIBS   += $(shell $(PKG_CONFIG) --libs imgui implot sdl3)
-
-#CPPFLAGS += -Iinclude
 
 #IMGUI_BACKENDS_DIR := $(shell pkg-config --variable=prefix imgui)/res/bindings
 IMGUI_PREFIX := $(shell sed -n 's/^prefix=//p' imgui.pc)
@@ -78,3 +47,65 @@ exec:
 
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET)
+
+
+
+LOGGER_SRC = logger/logger.cpp
+LOGGER_DEPS = src/hours.cpp
+LOGGER_OBJ = $(LOGGER_SRC:.cpp=.o) $(LOGGER_DEPS:.cpp=.o)
+
+LOGGER = logger/battery_status_logger_
+
+LDFLAGS = `pkg-config --libs sdl3`
+
+logger: $(LOGGER)
+
+$(LOGGER): $(LOGGER_OBJ)
+	$(CXX) -o $@ $(LOGGER_OBJ) $(LDFLAGS)
+
+
+install_logger: $(LOGGER)
+	@echo "Installing executable..."
+	sudo cp $(LOGGER) $(PREFIX)/battery_status_logger_
+	sudo chmod +x $(PREFIX)/battery_status_logger_
+	
+	@echo "Creating systemd service..."
+	@printf "[Unit]\n\
+	Description=Battery Status Logger\n\
+	After=network.target\n\n\
+	[Service]\n\
+	ExecStart=$(PREFIX)/battery_status_logger_\n\
+	WorkingDirectory=$(CURRENT_DIR)\n\
+	Restart=always\n\
+	User=$(CURRENT_USER)\n\n\
+	[Install]\n\
+	WantedBy=multi-user.target\n" | sudo tee $(SERVICE_PATH)/battery_status_logger.service > /dev/null
+	
+	@echo "Starting service..."
+	sudo systemctl daemon-reload
+	sudo systemctl enable battery_status_logger.service
+	sudo systemctl start battery_status_logger.service
+	@echo "Done."
+
+# Make command to uninstall the logger
+uninstall_logger:
+	@echo "Stopping and removing service..."
+	-sudo systemctl stop battery_status_logger.service
+	-sudo systemctl disable battery_status_logger.service
+	sudo rm -f $(SERVICE_PATH)/battery_status_logger.service
+	sudo systemctl daemon-reload
+	@echo "Removing executable..."
+	sudo rm -f $(PREFIX)/battery_status_logger_
+	@echo "Uninstallation complete."
+
+
+.PHONY: logger-status
+
+logger_status:
+	@if ! systemctl cat battery_status_logger.service >/dev/null 2>&1; then \
+		echo "Logger is not installed"; \
+	elif systemctl is-active --quiet battery_status_logger.service; then \
+		echo "Logger is active and running"; \
+	else \
+		echo "Logger is inactive"; \
+	fi
