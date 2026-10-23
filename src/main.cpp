@@ -1,4 +1,5 @@
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_dialog.h>
 #include <imgui.h>
 #include <imgui_impl_sdl3.h>
 #include <imgui_impl_sdlrenderer3.h>
@@ -20,7 +21,7 @@ namespace {
     constexpr float  PLOT_PANEL_TOP     = 55;
     constexpr float  PLOT_PANEL_MARGIN  = 0;   // bottom margin
 
-    constexpr ImGuiWindowFlags PANEL_FLAGS =
+    constexpr ImGuiWindowFlags PANEL_FLAGS=
         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
         ImGuiWindowFlags_NoMove     | ImGuiWindowFlags_NoCollapse |
         ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
@@ -42,7 +43,8 @@ namespace {
     /*Time interval for logging*/
     constexpr int LOG_EVERY_N_FRAMES = 60;
 
-    struct BatteryInfo {
+    struct BatteryInfo
+    {
         int         percentage;
         int         powerState;
         std::string remaining;
@@ -55,23 +57,30 @@ namespace {
 
     ImU32 decideColor(int powerState)
     {
-        switch (powerState) {
+        switch (powerState)
+        {
             case POWER_NO_BATTERY:
             case POWER_CHARGING:   return COL_GREEN;
+
             case POWER_ON_BATTERY: return COL_BLUE;
+
             default:               return COL_RED;
         }
     }
 
     void drawBattery(ImDrawList* drawList, ImVec2 position, int percentage, int powerState)
     {
-        const ImVec2 outerSize(BATTERY_WIDTH  + 2 * BATTERY_BORDER,
-                            BATTERY_HEIGHT + 2 * BATTERY_BORDER);
+        const ImVec2 outerSize
+        (
+            BATTERY_WIDTH  + 2 * BATTERY_BORDER,
+            BATTERY_HEIGHT + 2 * BATTERY_BORDER
+        );
         const ImVec2 innerPos(position.x + BATTERY_BORDER, position.y + BATTERY_BORDER);
         const float  fillWidth = BATTERY_WIDTH * percentage / 100.0f;
 
         drawList->AddRectFilled(position, ImVec2(position.x + outerSize.x, position.y + outerSize.y), COL_WHITE);
-        drawList->AddRectFilled(
+        drawList->AddRectFilled
+        (
             innerPos,
             ImVec2(innerPos.x + fillWidth, innerPos.y + BATTERY_HEIGHT),
             decideColor(powerState)
@@ -92,10 +101,21 @@ namespace {
         ImGui::Text("Battery capacity : %d%%", battery.percentage);
         ImGui::Text("%s", battery.remaining.c_str());
 
-        drawBattery(ImGui::GetWindowDrawList(), ImGui::GetCursorScreenPos(),
-                    battery.percentage, battery.powerState);
-        ImGui::Dummy(ImVec2(BATTERY_WIDTH + 2 * BATTERY_BORDER,
-                            BATTERY_HEIGHT + 2 * BATTERY_BORDER));
+        drawBattery
+        (
+            ImGui::GetWindowDrawList(),
+            ImGui::GetCursorScreenPos(),
+            battery.percentage,
+            battery.powerState
+        );
+        ImGui::Dummy
+        (
+            ImVec2
+            (
+                BATTERY_WIDTH + 2 * BATTERY_BORDER,
+                BATTERY_HEIGHT + 2 * BATTERY_BORDER
+            )
+        );
     }
 
     void plotSection(const PairData& data)
@@ -118,7 +138,8 @@ namespace {
         ImPlot::EndPlot();
     }
 
-    struct Segment {
+    struct Segment
+    {
         size_t start;
         size_t count;
         int power;
@@ -147,10 +168,13 @@ namespace {
 
     const char* powerLabel(int powerState)
     {
-        switch (powerState) {
+        switch (powerState)
+        {
             case POWER_NO_BATTERY:
             case POWER_CHARGING:   return "Charging / AC";
+
             case POWER_ON_BATTERY: return "On battery";
+
             default:               return "Unknown";
         }
     }
@@ -159,7 +183,9 @@ namespace {
     {
         if (!ImPlot::BeginPlot("Battery usage")) return;
 
-        ImPlot::SetupAxis(ImAxis_X1, nullptr, ImPlotScale_Time);
+        // ImPlot::SetupAxis(ImAxis_X1, nullptr, ImPlotScale_Time);
+        ImPlot::SetupAxis(ImAxis_X1);
+        ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Time);
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 100);
 
         const int n = (int)series.x.size();
@@ -176,7 +202,8 @@ namespace {
 
             const ImVec4 color = ImGui::ColorConvertU32ToFloat4(decideColor(seg.power));
             ImPlot::SetNextFillStyle(color, 0.35f);
-            ImPlot::PlotShaded(
+            ImPlot::PlotShaded
+            (
                 powerLabel(seg.power),
                 series.x.data() + seg.start,
                 series.y.data() + seg.start,
@@ -201,10 +228,10 @@ namespace {
     {
         bool running = true;
         SDL_Event event;
-        while (SDL_PollEvent(&event)) {
+        while (SDL_PollEvent(&event))
+        {
             ImGui_ImplSDL3_ProcessEvent(&event);
-            if (event.type == SDL_EVENT_QUIT)
-                running = false;
+            if (event.type == SDL_EVENT_QUIT) running = false;
         }
         return running;
     }
@@ -228,7 +255,8 @@ namespace {
     void logBattery(FILE* file, int frame, const BatteryInfo& battery)
     {
         if (file && frame % LOG_EVERY_N_FRAMES == 0)
-            fprintf(
+            fprintf
+            (
                 file,
                 "Frame : %d, battery : %d%%, %s\n",
                 frame,
@@ -239,19 +267,60 @@ namespace {
 
 } // namespace
 
+// This function will be triggered when the dialog closes
+static void SDLCALL MyFileDialogCallback(void* userdata, const char* const* filelist, int filter) {
+    if (!filelist) {
+        // An error occurred (e.g., OS portal failure)
+        SDL_Log("Dialog error: %s", SDL_GetError());
+        return;
+    }
+    
+    if (!*filelist) {
+        // The filelist is empty, meaning the user canceled the dialog
+        SDL_Log("User canceled the dialog.");
+        return;
+    }
+
+    // Loop through the selected files (handles single or multiple selections)
+    while (*filelist) {
+        SDL_Log("Selected file path: %s", *filelist);
+        filelist++; // Move to the next string in the array
+    }
+
+    // 'filter' returns the index of the user's selected file extension filter (-1 if unsupported)
+    SDL_Log("Selected filter index: %d", filter); 
+}
+
+static const SDL_DialogFileFilter filters[] = {
+    { "Log Files", "log" },
+    { "All Files", "*" }
+};
+
 int main()
 {
-    std::vector<SingleInstantBatteryState> s= read_from_log_file_vector(const_cast<char*>("/home/mqbaka/31-5-2026.log"));
+    // SDL_ShowOpenFileDialog
+    // (
+    //     MyFileDialogCallback,  // Your callback function
+    //     nullptr,               // Optional userdata pointer passed to the callback
+    //     NULL,          // Parent window making it modal (can be NULL)
+    //     filters,               // Array of file type filters
+    //     SDL_arraysize(filters),// Number of filters
+    //     nullptr,               // Default starting path (NULL opens OS default)
+    //     false                  // allow_many: set to true to allow multiple file selection
+    // );
+    std::vector<SingleInstantBatteryState> s= read_from_log_file_vector(const_cast<char*>("/home/mqbaka/21-10-2026.log"));
     const PlotSeries plots= getXY(s);
     const std::vector<Segment> segments= buildSegments(plots);
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
+    if (!SDL_Init(SDL_INIT_VIDEO))
+    {
         fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
         return 1;
     }
 
     SDL_Window*   window   = SDL_CreateWindow("SDL3 + ImGui", WINDOW_WIDTH, WINDOW_HEIGHT, 0);
     SDL_Renderer* renderer = window ? SDL_CreateRenderer(window, nullptr) : nullptr;
-    if (!renderer) {
+    if (!renderer)
+    {
         fprintf(stderr, "Window/renderer creation failed: %s\n", SDL_GetError());
         SDL_Quit();
         return 1;
@@ -265,8 +334,8 @@ int main()
     ImGui_ImplSDLRenderer3_Init(renderer);
 
     FILE* logFile = fopen("temp_logs/log.txt", "a");
-    if (!logFile)
-        fprintf(stderr, "Warning: could not open log.txt, logging disabled\n");
+
+    if (!logFile) fprintf(stderr, "Warning: could not open log.txt, logging disabled\n");
 
     // Path is relative to the working directory (see data.h)
     const PairData data = read_pairs("temp_logs/data.txt");
@@ -274,12 +343,14 @@ int main()
     const ImGuiIO& io = ImGui::GetIO();
     int frameCount = 0;
 
-    while (pumpEvents()) {
+    while (pumpEvents())
+    {
         beginImGuiFrame();
 
         const BatteryInfo battery = readBattery();
 
-        beginPanel(
+        beginPanel
+        (
             "Battery",
             BATTERY_PANEL_POS,
             BATTERY_PANEL_SIZE
@@ -290,7 +361,8 @@ int main()
         // Remove the default padding for the next window 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-        beginPanel(
+        beginPanel
+        (
             "Plot",
             ImVec2(0, PLOT_PANEL_TOP),
             ImVec2(io.DisplaySize.x, io.DisplaySize.y - PLOT_PANEL_TOP - PLOT_PANEL_MARGIN)
