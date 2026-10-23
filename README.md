@@ -76,6 +76,7 @@ battery-monitor/
 ├── assets/       # Application assets
 ├── exec/         # Compiled executable
 ├── include/      # Application headers
+├── logger/       # Code and executable for the logger daemon
 ├── src/          # Application source files
 ├── Makefile      # Build configuration
 ├── conanfile.txt # Conan dependencies

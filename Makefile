@@ -99,8 +99,8 @@ uninstall_logger:
 	@echo "Uninstallation complete."
 
 
-.PHONY: logger-status
-
+.PHONY: logger_status
+# Check the status of the logger in the system
 logger_status:
 	@if ! systemctl cat battery_status_logger.service >/dev/null 2>&1; then \
 		echo "Logger is not installed"; \
