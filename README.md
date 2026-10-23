@@ -68,6 +68,10 @@ exec/battery-monitor
 | `make` | Build the application |
 | `make clean` | Remove compiled objects and the executable |
 | `make clean && make` | Perform a clean rebuild |
+| `make logger` | Build the logger daemon executable |
+| `make install_logger` | Installs and run the logger daemon in your system  |
+| `make uninstall_logger` | Uninstall the logger daemon |
+| `make logger_status` | Check the current status of the logger daemon in your system (active, inactive, not installed) |
 
 ## Project Structure
 
