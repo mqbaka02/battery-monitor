@@ -17,3 +17,8 @@
 # Local IDE files
 .vscode/
 .idea/
+
+# Logs and binaries
+*.log
+log.txt
+logger/battery_status_logger_

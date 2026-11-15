@@ -39,7 +39,7 @@ namespace {
     constexpr ImU32 COL_WHITE = IM_COL32(255, 255, 255, 255);
 
     // If getPowerState() wraps SDL_GetPowerInfo, prefer SDL_POWERSTATE_* here.
-    enum PowerState { POWER_ON_BATTERY = 1, POWER_NO_BATTERY = 2, POWER_CHARGING = 3 };
+    enum PowerState { POWER_ON_BATTERY = 1, POWER_CHARGING = 2, POWER_CHARGED = 3 };
 
     /*Time interval for logging*/
     constexpr int LOG_EVERY_N_FRAMES = 60;
@@ -60,8 +60,8 @@ namespace {
     {
         switch (powerState)
         {
-            case POWER_NO_BATTERY:
-            case POWER_CHARGING:   return COL_GREEN;
+            case POWER_CHARGING:
+            case POWER_CHARGED:    return COL_GREEN;
 
             case POWER_ON_BATTERY: return COL_BLUE;
 
@@ -151,8 +151,8 @@ namespace {
     {
         switch (powerState)
         {
-            case POWER_NO_BATTERY:
-            case POWER_CHARGING:   return "Charging / AC";
+            case POWER_CHARGING:
+            case POWER_CHARGED:    return "Charging / AC";
 
             case POWER_ON_BATTERY: return "On battery";
 
